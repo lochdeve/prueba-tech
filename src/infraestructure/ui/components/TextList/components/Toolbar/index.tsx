@@ -8,7 +8,7 @@ const Toolbar = () => {
         justifyContent: 'space-between',
         width: '100%',
         backgroundColor: '#f7f7f7',
-        marginTop: '10px',
+        marginTop: '25px',
       }}
     >
       <div style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>

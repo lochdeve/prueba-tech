@@ -1,0 +1,15 @@
+.textListItem {
+  display: flex;
+  flex-direction: column;
+  color: #000;
+  padding: 4px;
+  padding-left: '16px';
+  margin-top: 8px;
+  margin-inline: 8px;
+  cursor: pointer;
+}
+
+.textListItem:hover {
+  background-color: #324bff;
+  color: #fff;
+}

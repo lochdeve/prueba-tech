@@ -1,0 +1,29 @@
+.button {
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #fff;
+  color: #324bff;
+  border: 1px solid #324bff;
+  border-radius: 24px;
+  width: 100px;
+}
+
+.button:hover {
+  background-color: #324bff;
+  color: #fff;
+}
+
+.reload.button {
+  width: 60px !important;
+}
+
+.add.button {
+  color: #fff;
+  width: 100px !important;
+  background-color: #324bff !important;
+}
+
+.add.button:hover {
+  background-color: #1d37fc !important;
+}

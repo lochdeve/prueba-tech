@@ -1,16 +1,30 @@
 export default {
   preset: 'ts-jest',
-  testEnvironment: 'node',
+  testEnvironment: 'jsdom',
   roots: ['<rootDir>/src'],
-  testMatch: ['**/__tests__/**/*.ts', '**/?(*.)+(spec|test).ts'],
+  testMatch: [
+    '**/__tests__/**/*.ts',
+    '**/?(*.)+(spec|test).ts',
+    '**/?(*.)+(spec|test).tsx',
+  ],
   transform: {
-    '^.+\\.ts$': 'ts-jest',
+    '^.+\\.(ts|tsx)$': [
+      'ts-jest',
+      {
+        tsconfig: 'tsconfig.test.json',
+      },
+    ],
   },
+  moduleNameMapper: {
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+  },
+  setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
   collectCoverageFrom: [
-    'src/**/*.ts',
+    'src/**/*.{ts,tsx}',
     '!src/**/*.d.ts',
     '!src/main.tsx',
     '!src/vite-env.d.ts',
+    '!src/setupTests.ts',
   ],
   coverageThreshold: {
     global: {
@@ -19,5 +33,8 @@ export default {
       lines: 80,
       statements: 80,
     },
+  },
+  testEnvironmentOptions: {
+    customExportConditions: [''],
   },
 };

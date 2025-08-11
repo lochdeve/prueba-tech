@@ -1,0 +1,88 @@
+---
+description: Reglas y convenciones para aplicar principios SOLID en componentes y arquitectura React.
+globs:
+  - 'src/**'
+alwaysApply: false
+---
+
+# Principios SOLID en React
+
+> Objetivo: mantener el código modular, extensible y fácil de mantener siguiendo Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation y Dependency Inversion.
+
+---
+
+## S — Single Responsibility Principle (SRP)
+
+- Cada componente debe tener **una única responsabilidad clara**:
+  - Presentational component → solo renderiza UI.
+  - Container component → orquesta casos de uso y estado.
+- Evitar que un componente mezcle múltiples responsabilidades (ej. validación de datos, llamadas API y renderizado en el mismo archivo).
+
+---
+
+## O — Open/Closed Principle (OCP)
+
+- Los componentes deben ser **abiertos para extensión pero cerrados para modificación**:
+  - Usa props y composition para extender comportamientos sin tocar el código original.
+  - Implementa hooks reutilizables para extender la lógica.
+
+---
+
+## L — Liskov Substitution Principle (LSP)
+
+- Los componentes y hooks deben poder ser sustituidos por otros del mismo contrato (prop types / interfaces) sin romper el sistema.
+- No añadir props que cambien radicalmente la naturaleza del componente (ej. `isListOrGrid` que cambie toda la estructura → separar en dos componentes).
+
+---
+
+## I — Interface Segregation Principle (ISP)
+
+- Evitar interfaces de props enormes que obliguen a los consumidores a proveer datos innecesarios.
+- Preferir **props pequeñas y específicas**.
+- Dividir responsabilidades en hooks y componentes más pequeños en lugar de uno “todo en uno”.
+
+---
+
+## D — Dependency Inversion Principle (DIP)
+
+- Los componentes de alto nivel no deben depender de implementaciones concretas sino de **contratos** (interfaces, tipos).
+- La inyección de dependencias puede ser vía props, hooks, o context configurado en el nivel más alto posible.
+- No acoplar componentes directamente a librerías externas de datos; envolverlas en adaptadores/hooks.
+
+---
+
+# Convenciones prácticas
+
+- **Presentational vs. Container**:
+  - `components/` → SRP, sin lógica de negocio.
+  - `containers/` → orquestan datos, casos de uso y estado.
+- **Hooks**:
+  - Un hook = una responsabilidad (SRP).
+  - Si un hook hace demasiado, dividirlo.
+- **Props**:
+  - Tipar siempre con `type` o `interface`.
+  - No forzar props innecesarias (ISP).
+- **Extensibilidad**:
+  - Usar children y render props para OCP.
+  - No modificar componentes base si el cambio puede ser hecho vía extensión.
+
+---
+
+# Ejemplos de aplicación
+
+## Ejemplo SRP:
+
+```tsx
+// Componente Presentacional
+export const UserCard = ({ name, email }: { name: string; email: string }) => (
+  <div>
+    <h2>{name}</h2>
+    <p>{email}</p>
+  </div>
+);
+
+// Hook que orquesta datos
+export const useUserData = (id: string) => {
+  // fetch y lógica de estado
+};
+```

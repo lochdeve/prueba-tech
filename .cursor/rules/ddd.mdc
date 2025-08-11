@@ -1,0 +1,95 @@
+---
+description: Reglas y convenciones para aplicar Domain-Driven Design (DDD) en el frontend (React) del proyecto.
+globs:
+  - 'src/**'
+alwaysApply: false
+---
+
+# Principios generales (DDD + React)
+
+- Mantén una separación clara entre **domain**, **application**, **infrastructure** y **ui** (React).
+
+  - `src/domain/*` — entidades, value objects, agregados, interfaces (puros, sin dependencias de React ni de infra).
+  - `src/application/*` — casos de uso (use-cases), orquestación, mappers entre domain DTOs y shapes de UI.
+  - `src/infrastructure/*` — implementaciones concretas: API clients, adaptadores a storage, repositorios reales.
+  - `src/ui/*` — componentes React, hooks UI, presentational & container components.
+
+- Domain first: la lógica de negocio debe vivir en `domain`. Los componentes React solo orquestan y muestran datos.
+
+- Escribe tests de unidad para `domain` y `application`. Usa tests de integración en `infrastructure` (mocks de red/local).
+
+# Naming y estructura de archivos
+
+- Entidades: `{Name}.entity.ts` o `{Name}.ts` dentro de `src/domain/entities/`.
+- Value objects: `{Name}.vo.ts` o `{Name}.value.ts`.
+- Repositorios (interfaces): `I{Name}Repository.ts` dentro de `src/domain/repositories/`.
+- Implementación de repositorio: `src/infrastructure/repositories/{Name}Repository.ts`.
+- Casos de uso: `src/application/usecases/{action}{Entity}.ts` (p.ej. `CreateOrder.ts`).
+- Tipos / DTOs: `src/domain/types/*` o `src/application/dtos/*` según corresponda.
+
+# Convenciones de código
+
+- Mantén domain puro: sin imports de React, window, localStorage directo, ni dependencias de infra.
+- Los side effects van en `infrastructure` o en `application` coordinados por casos de uso.
+- Validación de entrada (contratos) con Zod/`io-ts` en `application` y esquemas exportados en `domain` si forman parte del invariant.
+- Exportar únicamente lo necesario desde cada folder (index barrels con cuidado).
+
+# React: componentes y hooks
+
+- División clara entre:
+  - Presentational components (puro render, props typed) → `components/`
+  - Container/Smart components o pages (orquestan casos de uso) → `containers/` o `pages/`
+- Hooks:
+  - `useXxxDomain()` solo orquesta casos de uso y transforma domain → UI.
+  - No mezcles lógica de negocio compleja dentro de hooks de UI; llama a casos de uso en `application`.
+- Props y state:
+  - Tipar props con interfaces/`type` exportadas.
+  - Preferir composition sobre prop drilling: usar Contexts solo cuando tenga sentido (no como sustituto de dependencia explícita).
+
+# Repositorios & adaptadores
+
+- Define interface en `domain/repositories/I{Entity}Repository.ts` con métodos CRUD minimalistas (p.ej. `save`, `findById`, `findAllBySpec`).
+- Implementación concreta en infra debe mapear DTOs ⇄ entidades del domain.
+- Siempre inyectar repositorios en casos de uso (constructor injection / factories).
+
+# Testing
+
+- `domain` — tests puros: invariants, equality de value objects, reglas de agregados.
+- `application` — tests unitarios para casos de uso con repositorios falsos/mocks.
+- `integration` — end-to-end de flujos importantes (opcional).
+- Ejemplo: `src/domain/entities/Order.entity.test.ts`
+
+# Performance, accesibilidad y UX
+
+- Usa Suspense + lazy loading para code-splitting cuando aplique.
+- Mantén componentes accesibles (labels, roles).
+- Evitar cálculos pesados en render; extraer a memoized selectors o a domain/application.
+
+# Seguridad y validación
+
+- Nunca confiar en datos del cliente: validar en backend y revalidar en `application` si es necesario.
+- Sanitizar entradas que vayan a render HTML.
+
+# Plantillas y ejemplos (referencias)
+
+- Incluir plantillas en el repo y referenciarlas desde reglas para que Cursor pueda adjuntarlas. Añade estos archivos en `/.cursor/templates/` o en el mismo `.cursor/rules` si lo prefieres.
+
+Ejemplo de plantilla de componente (guardar como `/.cursor/templates/react-component-template.tsx`):
+
+```tsx
+// react-component-template.tsx
+import React from 'react';
+
+export interface {{Name}}Props {
+  /** Props tipadas */
+}
+
+export const {{Name}}: React.FC<{{Name}}Props> = (props) => {
+  // Pure presentational component: no lógica de negocio
+  return (
+    <div>
+      {/* ... */}
+    </div>
+  );
+};
+```

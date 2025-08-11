@@ -1,14 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1754844893707" clover="3.2.0">
-  <project timestamp="1754844893707" name="All files">
-    <metrics statements="5" coveredstatements="5" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1" elements="8" coveredelements="8" complexity="0" loc="5" ncloc="5" packages="1" files="1" classes="1"/>
-    <file name="TextListService.ts" path="C:\Users\carlo\Documents\Carlos\Programacion\prueba-logi-travel\src\domain\services\TextListService.ts">
+<coverage generated="1754950264292" clover="3.2.0">
+  <project timestamp="1754950264292" name="All files">
+    <metrics statements="30" coveredstatements="12" conditionals="2" coveredconditionals="2" methods="8" coveredmethods="3" elements="40" coveredelements="17" complexity="0" loc="30" ncloc="30" packages="7" files="7" classes="7"/>
+    <package name="domain.services">
       <metrics statements="5" coveredstatements="5" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
-      <line num="1" count="1" type="stmt"/>
-      <line num="7" count="1" type="stmt"/>
-      <line num="8" count="9" type="stmt"/>
-      <line num="9" count="9" type="cond" truecount="2" falsecount="0"/>
-      <line num="11" count="7" type="stmt"/>
-    </file>
+      <file name="TextListService.ts" path="C:\Users\carlo\Documents\Carlos\Programacion\prueba-logi-travel\src\domain\services\TextListService.ts">
+        <metrics statements="5" coveredstatements="5" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="8" count="9" type="stmt"/>
+        <line num="9" count="9" type="cond" truecount="2" falsecount="0"/>
+        <line num="11" count="7" type="stmt"/>
+      </file>
+    </package>
+    <package name="infraestructure.ui">
+      <metrics statements="3" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+      <file name="App.tsx" path="C:\Users\carlo\Documents\Carlos\Programacion\prueba-logi-travel\src\infraestructure\ui\App.tsx">
+        <metrics statements="3" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="4" count="0" type="stmt"/>
+        <line num="20" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="infraestructure.ui.components">
+      <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+      <file name="index.ts" path="C:\Users\carlo\Documents\Carlos\Programacion\prueba-logi-travel\src\infraestructure\ui\components\index.ts">
+        <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="infraestructure.ui.components.TextList">
+      <metrics statements="5" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+      <file name="index.tsx" path="C:\Users\carlo\Documents\Carlos\Programacion\prueba-logi-travel\src\infraestructure\ui\components\TextList\index.tsx">
+        <metrics statements="5" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="2" count="0" type="stmt"/>
+        <line num="4" count="0" type="stmt"/>
+        <line num="5" count="0" type="stmt"/>
+        <line num="19" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="infraestructure.ui.components.TextList.components.List">
+      <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+      <file name="List.tsx" path="C:\Users\carlo\Documents\Carlos\Programacion\prueba-logi-travel\src\infraestructure\ui\components\TextList\components\List\List.tsx">
+        <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="6" count="7" type="stmt"/>
+        <line num="10" count="35" type="stmt"/>
+        <line num="18" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="infraestructure.ui.components.TextList.components.ListItem">
+      <metrics statements="4" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+      <file name="index.tsx" path="C:\Users\carlo\Documents\Carlos\Programacion\prueba-logi-travel\src\infraestructure\ui\components\TextList\components\ListItem\index.tsx">
+        <metrics statements="4" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="3" count="0" type="stmt"/>
+        <line num="4" count="0" type="stmt"/>
+        <line num="7" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="infraestructure.ui.components.TextList.components.Toolbar">
+      <metrics statements="5" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+      <file name="index.tsx" path="C:\Users\carlo\Documents\Carlos\Programacion\prueba-logi-travel\src\infraestructure\ui\components\TextList\components\Toolbar\index.tsx">
+        <metrics statements="5" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="2" count="0" type="stmt"/>
+        <line num="4" count="0" type="stmt"/>
+        <line num="5" count="0" type="stmt"/>
+        <line num="31" count="0" type="stmt"/>
+      </file>
+    </package>
   </project>
 </coverage>

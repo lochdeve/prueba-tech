@@ -1,14 +1,25 @@
 import { IoReload } from 'react-icons/io5';
 import styles from './Toolbar.module.css';
 
-const Toolbar = () => {
+export interface ToolbarProps {
+  onAdd: () => void;
+  onReload: () => void;
+  onDelete: () => void;
+  hasSelectedItems?: boolean;
+}
+
+const Toolbar: React.FC<ToolbarProps> = ({
+  onAdd,
+  onReload,
+  onDelete,
+  hasSelectedItems = false,
+}) => {
   return (
     <div
       style={{
         display: 'flex',
         justifyContent: 'space-between',
         width: '100%',
-        backgroundColor: '#f7f7f7',
         marginTop: '25px',
       }}
     >
@@ -16,13 +27,22 @@ const Toolbar = () => {
         <button
           className={styles.reload + ' ' + styles.button}
           aria-label='Reload'
+          onClick={onReload}
         >
           <IoReload />
         </button>
-        <button className={styles.button}>DELETE</button>
+        <button
+          className={styles.button}
+          onClick={onDelete}
+          disabled={!hasSelectedItems}
+        >
+          DELETE
+        </button>
       </div>
       <div style={{ display: 'flex', flexDirection: 'row' }}>
-        <button className={styles.button + ' ' + styles.add}>ADD</button>
+        <button className={styles.button + ' ' + styles.add} onClick={onAdd}>
+          ADD
+        </button>
       </div>
     </div>
   );

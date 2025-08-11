@@ -1,16 +1,51 @@
+import React from 'react';
+import { Modal } from '../../../Modal';
+import { useTextList } from '../../hooks/useTextList';
+import { AddItemForm } from '../AddItemForm';
 import TextListItem from '../ListItem';
 import Toolbar from '../Toolbar';
 import styles from './List.module.css';
 
-const TextList = () => {
+const TextList: React.FC = () => {
+  const {
+    items,
+    isModalOpen,
+    isLoading,
+    handleAddItem,
+    handleOpenModal,
+    handleCloseModal,
+    handleReload,
+    handleDeleteSelected,
+  } = useTextList();
+
+  const hasSelectedItems = items.some((item) => item.selected);
+
   return (
     <>
       <div className={styles.list}>
-        {['ef6sa', 'e75sa', 'efs899a', 'efs90a', 'ef3445sa'].map((text) => (
-          <TextListItem key={text} text={text} />
+        {items.map((item) => (
+          <TextListItem key={item.id} text={item.value} />
         ))}
       </div>
-      <Toolbar />
+
+      <Toolbar
+        onAdd={handleOpenModal}
+        onReload={handleReload}
+        onDelete={handleDeleteSelected}
+        hasSelectedItems={hasSelectedItems}
+      />
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        title='Add item to list'
+      >
+        <AddItemForm
+          onSubmit={handleAddItem}
+          onCancel={handleCloseModal}
+          isLoading={isLoading}
+        />
+      </Modal>
     </>
   );
 };

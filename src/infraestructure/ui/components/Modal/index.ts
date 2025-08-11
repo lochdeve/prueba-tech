@@ -1,3 +1,2 @@
 export { Modal } from './Modal';
 export type { ModalProps } from './Modal';
-export { default as TextList } from './TextList';

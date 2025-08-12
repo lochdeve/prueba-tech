@@ -17,14 +17,12 @@ export const useTextList = (initialItems: TextList = []) => {
     setIsLoading(true);
 
     try {
-      // Simular una operación asíncrona (en un caso real, aquí iría la llamada al API)
       await new Promise((resolve) => setTimeout(resolve, 500));
 
       setItems((prevItems) => addTextItem(prevItems, value));
       setIsModalOpen(false);
     } catch (error) {
       console.error('Error al agregar elemento:', error);
-      // Aquí podrías mostrar un mensaje de error al usuario
     } finally {
       setIsLoading(false);
     }
@@ -39,12 +37,15 @@ export const useTextList = (initialItems: TextList = []) => {
   }, []);
 
   const handleReload = useCallback(() => {
-    // Aquí podrías recargar los datos desde el servidor
     console.log('Recargando lista...');
   }, []);
 
   const handleDeleteSelected = useCallback(() => {
     setItems((prevItems) => prevItems.filter((item) => !item.selected));
+  }, []);
+
+  const handleDeleteItem = useCallback((itemId: string) => {
+    setItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
   }, []);
 
   const handleToggleItemSelection = useCallback((itemId: string) => {
@@ -67,6 +68,7 @@ export const useTextList = (initialItems: TextList = []) => {
     handleCloseModal,
     handleReload,
     handleDeleteSelected,
+    handleDeleteItem,
     handleToggleItemSelection,
   };
 };

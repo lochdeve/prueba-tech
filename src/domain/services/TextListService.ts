@@ -6,7 +6,7 @@ import type { TextList } from '../types';
  */
 export function addTextItem(list: TextList, value: string): TextList {
   const trimmed = value.trim();
-  if (!trimmed) return list; // no añadir si está vacío
+  if (!trimmed) return list;
 
   return [
     ...list,

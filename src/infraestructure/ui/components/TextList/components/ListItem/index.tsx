@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import styles from './ListItem.module.css';
 
 export interface TextListItemProps {
@@ -6,6 +6,7 @@ export interface TextListItemProps {
   text: string;
   selected: boolean;
   onToggleSelection: (id: string) => void;
+  onDeleteItem: (id: string) => void;
 }
 
 const TextListItem: React.FC<TextListItemProps> = ({
@@ -13,9 +14,22 @@ const TextListItem: React.FC<TextListItemProps> = ({
   text,
   selected,
   onToggleSelection,
+  onDeleteItem,
 }) => {
+  const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const handleClick = () => {
-    onToggleSelection(id);
+    if (clickTimeoutRef.current) {
+      clearTimeout(clickTimeoutRef.current);
+      clickTimeoutRef.current = null;
+      onDeleteItem(id);
+      return;
+    }
+
+    clickTimeoutRef.current = setTimeout(() => {
+      onToggleSelection(id);
+      clickTimeoutRef.current = null;
+    }, 200);
   };
 
   return (

@@ -2,7 +2,6 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import TextList from './List';
 
-// Mock de los componentes hijos
 jest.mock('../ListItem', () => {
   return function MockTextListItem({ text }: { text: string }) {
     return <div data-testid='text-list-item'>{text}</div>;
@@ -17,7 +16,6 @@ jest.mock('../Toolbar', () => {
 
 describe('TextList Component', () => {
   beforeEach(() => {
-    // Limpiar todos los mocks antes de cada test
     jest.clearAllMocks();
   });
 
@@ -50,11 +48,9 @@ describe('TextList Component', () => {
   it('should have the correct structure with list and toolbar', () => {
     const { container } = render(<TextList />);
 
-    // Verificar que existe un div con la clase de la lista
     const listContainer = container.querySelector('.list');
     expect(listContainer).toBeInTheDocument();
 
-    // Verificar que el toolbar está presente
     expect(screen.getByTestId('toolbar')).toBeInTheDocument();
   });
 

@@ -1,4 +1,4 @@
-import { IoReload } from 'react-icons/io5';
+import { GrRevert } from 'react-icons/gr';
 import styles from './Toolbar.module.css';
 
 export interface ToolbarProps {
@@ -31,7 +31,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
           aria-label='Reload'
           onClick={onReload}
         >
-          <IoReload />
+          <GrRevert />
         </button>
         <button
           className={styles.button}

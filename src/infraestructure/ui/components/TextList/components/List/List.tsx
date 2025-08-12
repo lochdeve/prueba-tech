@@ -17,6 +17,7 @@ const TextList: React.FC = () => {
     handleCloseModal,
     handleReload,
     handleDeleteSelected,
+    handleDeleteItem,
     handleToggleItemSelection,
   } = useTextList();
 
@@ -32,6 +33,7 @@ const TextList: React.FC = () => {
             text={item.value}
             selected={item.selected}
             onToggleSelection={handleToggleItemSelection}
+            onDeleteItem={handleDeleteItem}
           />
         ))}
       </div>

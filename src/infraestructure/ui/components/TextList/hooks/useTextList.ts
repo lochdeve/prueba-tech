@@ -47,14 +47,26 @@ export const useTextList = (initialItems: TextList = []) => {
     setItems((prevItems) => prevItems.filter((item) => !item.selected));
   }, []);
 
+  const handleToggleItemSelection = useCallback((itemId: string) => {
+    setItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === itemId ? { ...item, selected: !item.selected } : item
+      )
+    );
+  }, []);
+
+  const selectedCount = items.filter((item) => item.selected).length;
+
   return {
     items,
     isModalOpen,
     isLoading,
+    selectedCount,
     handleAddItem,
     handleOpenModal,
     handleCloseModal,
     handleReload,
     handleDeleteSelected,
+    handleToggleItemSelection,
   };
 };

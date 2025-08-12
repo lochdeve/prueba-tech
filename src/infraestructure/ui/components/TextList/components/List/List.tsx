@@ -11,11 +11,13 @@ const TextList: React.FC = () => {
     items,
     isModalOpen,
     isLoading,
+    selectedCount,
     handleAddItem,
     handleOpenModal,
     handleCloseModal,
     handleReload,
     handleDeleteSelected,
+    handleToggleItemSelection,
   } = useTextList();
 
   const hasSelectedItems = items.some((item) => item.selected);
@@ -24,7 +26,13 @@ const TextList: React.FC = () => {
     <>
       <div className={styles.list}>
         {items.map((item) => (
-          <TextListItem key={item.id} text={item.value} />
+          <TextListItem
+            key={item.id}
+            id={item.id}
+            text={item.value}
+            selected={item.selected}
+            onToggleSelection={handleToggleItemSelection}
+          />
         ))}
       </div>
 
@@ -33,6 +41,7 @@ const TextList: React.FC = () => {
         onReload={handleReload}
         onDelete={handleDeleteSelected}
         hasSelectedItems={hasSelectedItems}
+        selectedCount={selectedCount}
       />
 
       <Modal

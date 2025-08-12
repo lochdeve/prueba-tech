@@ -34,3 +34,40 @@
 .list::-webkit-scrollbar-thumb:hover {
   background-color: rgba(0, 0, 0, 0.4);
 }
+
+.listHeader {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #fafafa;
+  border-bottom: 1px solid #e6e6e6;
+  border-radius: 4px 4px 0 0;
+}
+
+.selectAllContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.selectAllButton {
+  background-color: #324bff;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.selectAllButton:hover {
+  background-color: #1a3bff;
+}
+
+.selectAllText {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}

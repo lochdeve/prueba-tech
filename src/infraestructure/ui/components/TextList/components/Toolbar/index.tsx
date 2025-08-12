@@ -6,6 +6,7 @@ export interface ToolbarProps {
   onReload: () => void;
   onDelete: () => void;
   hasSelectedItems?: boolean;
+  selectedCount?: number;
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({
@@ -13,6 +14,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
   onReload,
   onDelete,
   hasSelectedItems = false,
+  selectedCount = 0,
 }) => {
   return (
     <div
@@ -36,7 +38,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
           onClick={onDelete}
           disabled={!hasSelectedItems}
         >
-          DELETE
+          DELETE {selectedCount > 0 && `(${selectedCount})`}
         </button>
       </div>
       <div style={{ display: 'flex', flexDirection: 'row' }}>

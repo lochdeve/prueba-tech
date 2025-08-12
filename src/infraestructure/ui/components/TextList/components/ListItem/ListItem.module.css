@@ -13,3 +13,8 @@
   background-color: #324bff;
   color: #fff;
 }
+
+.textListItem.selected {
+  background-color: #324bff;
+  color: #fff;
+}

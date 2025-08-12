@@ -1,20 +1,22 @@
-import { GrRevert } from 'react-icons/gr';
+import { IoArrowUndo } from 'react-icons/io5';
 import styles from './Toolbar.module.css';
 
 export interface ToolbarProps {
   onAdd: () => void;
-  onReload: () => void;
   onDelete: () => void;
+  onUndo: () => void;
   hasSelectedItems?: boolean;
   selectedCount?: number;
+  canUndo?: boolean;
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({
   onAdd,
-  onReload,
   onDelete,
+  onUndo,
   hasSelectedItems = false,
   selectedCount = 0,
+  canUndo = false,
 }) => {
   return (
     <div
@@ -27,11 +29,12 @@ const Toolbar: React.FC<ToolbarProps> = ({
     >
       <div style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
         <button
-          className={styles.reload + ' ' + styles.button}
-          aria-label='Reload'
-          onClick={onReload}
+          className={styles.button + ' ' + styles.reload}
+          onClick={onUndo}
+          disabled={!canUndo}
+          aria-label='Undo last add'
         >
-          <GrRevert />
+          <IoArrowUndo />
         </button>
         <button
           className={styles.button}

@@ -1,5 +1,5 @@
 import type { TextList } from '../types';
-import { addTextItem } from './TextListService';
+import { addTextItem, undoLastAdd } from './TextListService';
 
 describe('addTextItem', () => {
   const mockTextList: TextList = [
@@ -121,5 +121,82 @@ describe('addTextItem', () => {
     // Assert
     expect(result).not.toBe(mockTextList);
     expect(mockTextList).toEqual(originalList);
+  });
+});
+
+describe('undoLastAdd', () => {
+  it('debería remover el último elemento añadido a la lista', () => {
+    // Arrange
+    const list: TextList = [
+      { id: '1', value: 'Primer ítem', selected: false },
+      { id: '2', value: 'Segundo ítem', selected: false },
+      { id: '3', value: 'Tercer ítem', selected: false },
+    ];
+    const expectedLength = list.length - 1;
+
+    // Act
+    const result = undoLastAdd(list);
+
+    // Assert
+    expect(result).toHaveLength(expectedLength);
+    expect(result).toEqual(list.slice(0, -1));
+  });
+
+  it('debería retornar una lista vacía cuando solo hay un elemento', () => {
+    // Arrange
+    const list: TextList = [{ id: '1', value: 'Único ítem', selected: false }];
+
+    // Act
+    const result = undoLastAdd(list);
+
+    // Assert
+    expect(result).toHaveLength(0);
+    expect(result).toEqual([]);
+  });
+
+  it('debería retornar una lista vacía cuando la lista ya está vacía', () => {
+    // Arrange
+    const list: TextList = [];
+
+    // Act
+    const result = undoLastAdd(list);
+
+    // Assert
+    expect(result).toHaveLength(0);
+    expect(result).toEqual([]);
+  });
+
+  it('debería retornar una nueva lista sin mutar la original', () => {
+    // Arrange
+    const list: TextList = [
+      { id: '1', value: 'Primer ítem', selected: false },
+      { id: '2', value: 'Segundo ítem', selected: false },
+    ];
+    const originalList = [...list];
+
+    // Act
+    const result = undoLastAdd(list);
+
+    // Assert
+    expect(result).not.toBe(list);
+    expect(list).toEqual(originalList);
+  });
+
+  it('debería mantener los elementos restantes en el orden correcto', () => {
+    // Arrange
+    const list: TextList = [
+      { id: '1', value: 'Primer ítem', selected: false },
+      { id: '2', value: 'Segundo ítem', selected: true },
+      { id: '3', value: 'Tercer ítem', selected: false },
+    ];
+
+    // Act
+    const result = undoLastAdd(list);
+
+    // Assert
+    expect(result).toEqual([
+      { id: '1', value: 'Primer ítem', selected: false },
+      { id: '2', value: 'Segundo ítem', selected: true },
+    ]);
   });
 });

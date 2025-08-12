@@ -12,10 +12,11 @@ const TextList: React.FC = () => {
     isModalOpen,
     isLoading,
     selectedCount,
+    canUndo,
     handleAddItem,
+    handleUndo,
     handleOpenModal,
     handleCloseModal,
-    handleReload,
     handleDeleteSelected,
     handleDeleteItem,
     handleToggleItemSelection,
@@ -40,10 +41,11 @@ const TextList: React.FC = () => {
 
       <Toolbar
         onAdd={handleOpenModal}
-        onReload={handleReload}
         onDelete={handleDeleteSelected}
+        onUndo={handleUndo}
         hasSelectedItems={hasSelectedItems}
         selectedCount={selectedCount}
+        canUndo={canUndo}
       />
 
       <Modal

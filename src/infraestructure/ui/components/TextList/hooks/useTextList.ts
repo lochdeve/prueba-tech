@@ -1,17 +1,15 @@
 import { useCallback, useState } from 'react';
-import { addTextItem } from '../../../../../domain/services/TextListService';
+import {
+  addTextItem,
+  undoLastAdd,
+} from '../../../../../domain/services/TextListService';
 import type { TextList } from '../../../../../domain/types';
 
-export const useTextList = (initialItems: TextList = []) => {
-  const [items, setItems] = useState<TextList>([
-    { id: '1', value: 'ef6sa', selected: false },
-    { id: '2', value: 'e75sa', selected: false },
-    { id: '3', value: 'efs899a', selected: false },
-    { id: '4', value: 'efs90a', selected: false },
-    { id: '5', value: 'ef3445sa', selected: false },
-  ]);
+export const useTextList = () => {
+  const [items, setItems] = useState<TextList>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [history, setHistory] = useState<TextList[]>([]);
 
   const handleAddItem = useCallback(async (value: string) => {
     setIsLoading(true);
@@ -19,7 +17,12 @@ export const useTextList = (initialItems: TextList = []) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      setItems((prevItems) => addTextItem(prevItems, value));
+      setItems((prevItems) => {
+        const newItems = addTextItem(prevItems, value);
+
+        setHistory((prevHistory) => [...prevHistory, prevItems]);
+        return newItems;
+      });
       setIsModalOpen(false);
     } catch (error) {
       console.error('Error al agregar elemento:', error);
@@ -28,16 +31,27 @@ export const useTextList = (initialItems: TextList = []) => {
     }
   }, []);
 
+  const handleUndo = useCallback(() => {
+    if (history.length === 0) return;
+
+    setItems((prevItems) => {
+      const newItems = undoLastAdd(prevItems);
+
+      setHistory((prevHistory) => {
+        const newHistory = [...prevHistory];
+        newHistory.pop();
+        return newHistory;
+      });
+      return newItems;
+    });
+  }, [history]);
+
   const handleOpenModal = useCallback(() => {
     setIsModalOpen(true);
   }, []);
 
   const handleCloseModal = useCallback(() => {
     setIsModalOpen(false);
-  }, []);
-
-  const handleReload = useCallback(() => {
-    console.log('Recargando lista...');
   }, []);
 
   const handleDeleteSelected = useCallback(() => {
@@ -57,16 +71,18 @@ export const useTextList = (initialItems: TextList = []) => {
   }, []);
 
   const selectedCount = items.filter((item) => item.selected).length;
+  const canUndo = history.length > 0;
 
   return {
     items,
     isModalOpen,
     isLoading,
     selectedCount,
+    canUndo,
     handleAddItem,
+    handleUndo,
     handleOpenModal,
     handleCloseModal,
-    handleReload,
     handleDeleteSelected,
     handleDeleteItem,
     handleToggleItemSelection,

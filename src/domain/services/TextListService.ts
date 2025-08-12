@@ -17,3 +17,13 @@ export function addTextItem(list: TextList, value: string): TextList {
     },
   ];
 }
+
+/**
+ * Deshace la última acción de añadir un elemento.
+ * Retorna la lista sin el último elemento añadido.
+ */
+export function undoLastAdd(list: TextList): TextList {
+  if (list.length === 0) return list;
+  
+  return list.slice(0, -1);
+}

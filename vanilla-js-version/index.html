@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text List - Vanilla JS</title>
+    <link rel="stylesheet" href="src/styles/main.css">
+</head>
+<body>
+    <div id="app">
+        <div class="container">
+            <h1>Text List</h1>
+            
+            <!-- Lista de elementos -->
+            <div id="text-list" class="text-list">
+                <!-- Los elementos se insertarán dinámicamente aquí -->
+            </div>
+            
+            <!-- Toolbar -->
+            <div class="toolbar">
+                <div class="toolbar-left">
+                    <button id="undo-btn" class="btn btn-undo" disabled>
+                        <span>↶</span>
+                    </button>
+                    <button id="delete-btn" class="btn btn-delete" disabled>
+                        DELETE <span id="selected-count"></span>
+                    </button>
+                </div>
+                <div class="toolbar-right">
+                    <button id="add-btn" class="btn btn-add">
+                        ADD
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal para añadir elementos -->
+        <div id="modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Add item to list</h2>
+                    <button id="close-modal" class="close-btn">&times;</button>
+                </div>
+                <form id="add-form" class="add-form">
+                    <div class="form-group">
+                        <label for="text-input">Add item to list</label>
+                        <input 
+                            type="text" 
+                            id="text-input" 
+                            placeholder="Type the text here..." 
+                            maxlength="100"
+                            required
+                        >
+                        <span id="error-message" class="error-message hidden"></span>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-submit">Add</button>
+                        <button type="button" id="cancel-btn" class="btn btn-cancel">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="src/main.js"></script>
+</body>
+</html>

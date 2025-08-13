@@ -29,7 +29,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
     >
       <div style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
         <button
-          className={styles.button}
+          className={styles.button + ' ' + styles.undo}
           onClick={onUndo}
           disabled={!canUndo}
           aria-label='Undo last action'

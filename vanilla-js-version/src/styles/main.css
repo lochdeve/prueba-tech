@@ -19,7 +19,7 @@ body {
   display: flex;
   flex-direction: column;
   background-color: #fff;
-  width: 500px;
+  width: 600px;
   height: 350px;
   padding: 30px;
   border-radius: 10px;
@@ -32,7 +32,6 @@ body {
   color: #000;
   font-size: 30px;
   font-family: 'Roboto Regular', sans-serif;
-  margin-bottom: 10px;
   text-align: center;
 }
 
@@ -41,8 +40,7 @@ body {
   font-size: 14px;
   text-align: center;
   font-family: 'Roboto Regular', sans-serif;
-  margin-bottom: 20px;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 /* Lista de elementos */
@@ -56,8 +54,8 @@ body {
   margin-top: 8px;
   max-height: 500px;
   overflow-y: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
 }
 
 .text-list::-webkit-scrollbar {
@@ -78,7 +76,7 @@ body {
 }
 
 .text-list:empty::after {
-  content: "No hay elementos en la lista. Haz clic en 'Add' para añadir el primero.";
+  content: "There are no elements in the list. Click on 'Add' to add the first one.";
   display: block;
   text-align: center;
   color: #747474;
@@ -154,6 +152,15 @@ body {
 .btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  background-color: #f8f9ff;
+  color: #324bff;
+  border-color: #324bff;
+}
+
+.btn:disabled:hover {
+  background-color: #f8f9ff;
+  color: #324bff;
+  border-color: #324bff;
 }
 
 .btn-undo {
@@ -375,27 +382,10 @@ body {
   display: none !important;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .container {
-    width: 90%;
-    height: auto;
-    min-height: 350px;
-    padding: 20px;
-  }
-
-  .toolbar {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .toolbar-left,
-  .toolbar-right {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .form-actions {
-    flex-direction: column;
-  }
+.form-label {
+  font-family: 'Roboto Regular', sans-serif;
+  font-weight: 500;
+  color: #1a1a1a;
+  font-size: 16px;
+  margin-bottom: 8px;
 }

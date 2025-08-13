@@ -41,7 +41,7 @@
                 <div class="modal-header">
                     <button id="close-modal" class="close-btn">&times;</button>
                 </div>
-                <form id="add-form" class="add-form">
+                <form id="add-form" class="add-form" novalidate>
                     <div class="form-group">
                         <label class="form-label" for="text-input">Add item to list</label>
                         <input 
@@ -49,7 +49,6 @@
                             id="text-input" 
                             placeholder="Type the text here..." 
                             maxlength="100"
-                            required
                         >
                         <span id="error-message" class="error-message hidden"></span>
                     </div>

@@ -1,14 +1,11 @@
 import { TextListService } from '../../../domain/services/TextListService.js';
 
-/**
- * Controlador principal que maneja toda la lógica de la aplicación de lista de texto
- */
 export function TextListController() {
   let state = {
     items: [],
     isModalOpen: false,
     isLoading: false,
-    history: [],
+    undoStack: [],
   };
 
   const elements = {
@@ -110,13 +107,24 @@ export function TextListController() {
 
       const newItems = TextListService.addTextItem(state.items, value);
 
-      setState({
-        ...state,
-        items: newItems,
-        history: [...state.history, state.items],
-        isModalOpen: false,
-        isLoading: false,
-      });
+      if (newItems.length > state.items.length) {
+        const addedItem = newItems[newItems.length - 1];
+        const undoAction = TextListService.createAddUndoAction(addedItem);
+
+        setState({
+          ...state,
+          items: newItems,
+          undoStack: [...state.undoStack, undoAction],
+          isModalOpen: false,
+          isLoading: false,
+        });
+      } else {
+        setState({
+          ...state,
+          isModalOpen: false,
+          isLoading: false,
+        });
+      }
 
       elements.addForm.reset();
       hideError();
@@ -137,35 +145,59 @@ export function TextListController() {
   }
 
   function handleUndo() {
-    if (state.history.length === 0) return;
+    if (state.undoStack.length === 0) return;
 
-    const newItems = TextListService.undoLastAdd(state.items);
-    const newHistory = [...state.history];
-    newHistory.pop();
+    const lastAction = state.undoStack[state.undoStack.length - 1];
+    const newItems = TextListService.applyUndoAction(state.items, lastAction);
+    const newUndoStack = state.undoStack.slice(0, -1);
 
     setState({
       ...state,
       items: newItems,
-      history: newHistory,
+      undoStack: newUndoStack,
     });
   }
 
   function handleDeleteSelected() {
+    const selectedItems = state.items.filter((item) => item.selected);
     const newItems = TextListService.removeSelectedItems(state.items);
 
-    setState({
-      ...state,
-      items: newItems,
-    });
+    if (selectedItems.length > 0) {
+      const undoAction =
+        TextListService.createDeleteSelectedUndoAction(selectedItems);
+
+      setState({
+        ...state,
+        items: newItems,
+        undoStack: [...state.undoStack, undoAction],
+      });
+    } else {
+      setState({
+        ...state,
+        items: newItems,
+      });
+    }
   }
 
   function handleDeleteItem(itemId) {
+    const itemToDelete = state.items.find((item) => item.id === itemId);
     const newItems = TextListService.removeItem(state.items, itemId);
 
-    setState({
-      ...state,
-      items: newItems,
-    });
+    if (itemToDelete) {
+      const undoAction =
+        TextListService.createDeleteItemUndoAction(itemToDelete);
+
+      setState({
+        ...state,
+        items: newItems,
+        undoStack: [...state.undoStack, undoAction],
+      });
+    } else {
+      setState({
+        ...state,
+        items: newItems,
+      });
+    }
   }
 
   function handleToggleItemSelection(itemId) {
@@ -222,12 +254,10 @@ export function TextListController() {
 
     div.addEventListener('click', () => {
       if (clickTimeout) {
-        // Doble clic - eliminar elemento
         clearTimeout(clickTimeout);
         clickTimeout = null;
         handleDeleteItem(item.id);
       } else {
-        // Clic simple - alternar selección
         clickTimeout = setTimeout(() => {
           handleToggleItemSelection(item.id);
           clickTimeout = null;
@@ -241,7 +271,7 @@ export function TextListController() {
   function renderToolbar() {
     const selectedCount = TextListService.getSelectedCount(state.items);
     const hasSelectedItems = TextListService.hasSelectedItems(state.items);
-    const canUndo = state.history.length > 0;
+    const canUndo = state.undoStack.length > 0;
 
     if (selectedCount > 0) {
       elements.selectedCount.textContent = `(${selectedCount})`;

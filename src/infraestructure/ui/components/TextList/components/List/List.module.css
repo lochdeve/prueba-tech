@@ -35,6 +35,14 @@
   background-color: rgba(0, 0, 0, 0.4);
 }
 
+.emptyMessage {
+  text-align: center;
+  color: #747474;
+  font-size: 14px;
+  font-family: 'Roboto Regular', sans-serif;
+  padding: 2rem;
+}
+
 .listHeader {
   display: flex;
   align-items: center;

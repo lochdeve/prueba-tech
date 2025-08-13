@@ -27,16 +27,23 @@ const TextList: React.FC = () => {
   return (
     <>
       <div className={styles.list}>
-        {items.map((item) => (
-          <TextListItem
-            key={item.id}
-            id={item.id}
-            text={item.value}
-            selected={item.selected}
-            onToggleSelection={handleToggleItemSelection}
-            onDeleteItem={handleDeleteItem}
-          />
-        ))}
+        {items.length === 0 ? (
+          <div className={styles.emptyMessage}>
+            There are no elements in the list. Click on 'Add' to add the first
+            one.
+          </div>
+        ) : (
+          items.map((item) => (
+            <TextListItem
+              key={item.id}
+              id={item.id}
+              text={item.value}
+              selected={item.selected}
+              onToggleSelection={handleToggleItemSelection}
+              onDeleteItem={handleDeleteItem}
+            />
+          ))
+        )}
       </div>
 
       <Toolbar

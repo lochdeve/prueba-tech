@@ -28,11 +28,21 @@ body {
   align-items: center;
 }
 
-h1 {
+.title {
   color: #000;
   font-size: 30px;
   font-family: 'Roboto Regular', sans-serif;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.description {
+  color: #747474;
+  font-size: 14px;
+  text-align: center;
+  font-family: 'Roboto Regular', sans-serif;
   margin-bottom: 20px;
+  line-height: 1.4;
 }
 
 /* Lista de elementos */

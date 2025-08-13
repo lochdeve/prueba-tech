@@ -16,6 +16,20 @@
   color: #fff;
 }
 
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #f8f9ff;
+  color: #324bff;
+  border-color: #324bff;
+}
+
+.button:disabled:hover {
+  background-color: #f8f9ff;
+  color: #324bff;
+  border-color: #324bff;
+}
+
 .reload.button {
   width: 60px !important;
 }

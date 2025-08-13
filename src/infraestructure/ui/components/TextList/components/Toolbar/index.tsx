@@ -29,10 +29,10 @@ const Toolbar: React.FC<ToolbarProps> = ({
     >
       <div style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
         <button
-          className={styles.button + ' ' + styles.reload}
+          className={styles.button}
           onClick={onUndo}
           disabled={!canUndo}
-          aria-label='Undo last add'
+          aria-label='Undo last action'
         >
           <IoArrowUndo />
         </button>

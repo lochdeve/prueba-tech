@@ -1,9 +1,6 @@
 import { v4 as uuid } from 'uuid';
-import type { TextList } from '../types';
+import type { TextItem, TextList, UndoAction } from '../types';
 
-/**
- * Añade un nuevo ítem a la lista si el valor no está vacío.
- */
 export function addTextItem(list: TextList, value: string): TextList {
   const trimmed = value.trim();
   if (!trimmed) return list;
@@ -18,12 +15,52 @@ export function addTextItem(list: TextList, value: string): TextList {
   ];
 }
 
-/**
- * Deshace la última acción de añadir un elemento.
- * Retorna la lista sin el último elemento añadido.
- */
-export function undoLastAdd(list: TextList): TextList {
-  if (list.length === 0) return list;
-  
-  return list.slice(0, -1);
+function sortById(a: TextItem, b: TextItem): number {
+  const aNum = parseInt(a.id);
+  const bNum = parseInt(b.id);
+  if (!isNaN(aNum) && !isNaN(bNum)) {
+    return aNum - bNum;
+  }
+  return a.id.localeCompare(b.id);
+}
+
+export function applyUndoAction(list: TextList, action: UndoAction): TextList {
+  switch (action.type) {
+    case 'ADD': {
+      return list.filter((item) => item.id !== action.item.id);
+    }
+
+    case 'DELETE_SELECTED': {
+      const restoredItems = action.deletedItems.map((item) => ({
+        ...item,
+        selected: false,
+      }));
+      return [...list, ...restoredItems].sort(sortById);
+    }
+
+    case 'DELETE_ITEM': {
+      const restoredItem = {
+        ...action.deletedItem,
+        selected: false,
+      };
+      return [...list, restoredItem].sort(sortById);
+    }
+
+    default:
+      return list;
+  }
+}
+
+export function createAddUndoAction(item: TextItem): UndoAction {
+  return { type: 'ADD', item };
+}
+
+export function createDeleteSelectedUndoAction(
+  deletedItems: TextItem[]
+): UndoAction {
+  return { type: 'DELETE_SELECTED', deletedItems };
+}
+
+export function createDeleteItemUndoAction(deletedItem: TextItem): UndoAction {
+  return { type: 'DELETE_ITEM', deletedItem };
 }

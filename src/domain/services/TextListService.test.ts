@@ -1,5 +1,11 @@
-import type { TextList } from '../types';
-import { addTextItem, undoLastAdd } from './TextListService';
+import type { TextList, UndoAction } from '../types';
+import {
+  addTextItem,
+  applyUndoAction,
+  createAddUndoAction,
+  createDeleteItemUndoAction,
+  createDeleteSelectedUndoAction,
+} from './TextListService';
 
 describe('addTextItem', () => {
   const mockTextList: TextList = [
@@ -11,14 +17,11 @@ describe('addTextItem', () => {
   ];
 
   it('debería añadir un nuevo ítem a la lista cuando el valor no está vacío', () => {
-    // Arrange
     const newValue = 'Nuevo ítem';
     const expectedLength = mockTextList.length + 1;
 
-    // Act
     const result = addTextItem(mockTextList, newValue);
 
-    // Assert
     expect(result).toHaveLength(expectedLength);
     expect(result[result.length - 1]).toMatchObject({
       value: newValue,
@@ -29,51 +32,39 @@ describe('addTextItem', () => {
   });
 
   it('debería retornar la lista original cuando el valor está vacío', () => {
-    // Arrange
     const emptyValue = '';
 
-    // Act
     const result = addTextItem(mockTextList, emptyValue);
 
-    // Assert
     expect(result).toEqual(mockTextList);
     expect(result).toHaveLength(mockTextList.length);
   });
 
   it('debería retornar la lista original cuando el valor solo contiene espacios en blanco', () => {
-    // Arrange
     const whitespaceValue = '   \t\n  ';
 
-    // Act
     const result = addTextItem(mockTextList, whitespaceValue);
 
-    // Assert
     expect(result).toEqual(mockTextList);
     expect(result).toHaveLength(mockTextList.length);
   });
 
   it('debería recortar espacios en blanco del valor antes de añadirlo', () => {
-    // Arrange
     const valueWithSpaces = '  Valor con espacios  ';
     const expectedTrimmedValue = 'Valor con espacios';
 
-    // Act
     const result = addTextItem(mockTextList, valueWithSpaces);
 
-    // Assert
     expect(result[result.length - 1].value).toBe(expectedTrimmedValue);
   });
 
   it('debería generar un ID único para cada nuevo ítem', () => {
-    // Arrange
     const value1 = 'Primer ítem';
     const value2 = 'Segundo ítem';
 
-    // Act
     const result1 = addTextItem(mockTextList, value1);
     const result2 = addTextItem(result1, value2);
 
-    // Assert
     const newItem1 = result1[result1.length - 1];
     const newItem2 = result2[result2.length - 1];
 
@@ -82,26 +73,20 @@ describe('addTextItem', () => {
   });
 
   it('debería mantener los ítems existentes sin modificar', () => {
-    // Arrange
     const newValue = 'Nuevo ítem';
 
-    // Act
     const result = addTextItem(mockTextList, newValue);
 
-    // Assert
     expect(result[0]).toEqual(mockTextList[0]);
     expect(result.slice(0, -1)).toEqual(mockTextList);
   });
 
   it('debería manejar una lista vacía correctamente', () => {
-    // Arrange
     const emptyList: TextList = [];
     const newValue = 'Primer ítem';
 
-    // Act
     const result = addTextItem(emptyList, newValue);
 
-    // Assert
     expect(result).toHaveLength(1);
     expect(result[0]).toMatchObject({
       value: newValue,
@@ -111,92 +96,150 @@ describe('addTextItem', () => {
   });
 
   it('debería retornar una nueva lista sin mutar la original', () => {
-    // Arrange
     const newValue = 'Nuevo ítem';
     const originalList = [...mockTextList];
 
-    // Act
     const result = addTextItem(mockTextList, newValue);
 
-    // Assert
     expect(result).not.toBe(mockTextList);
     expect(mockTextList).toEqual(originalList);
   });
 });
 
-describe('undoLastAdd', () => {
-  it('debería remover el último elemento añadido a la lista', () => {
-    // Arrange
+describe('applyUndoAction', () => {
+  it('debería deshacer una acción ADD removiendo el elemento', () => {
     const list: TextList = [
-      { id: '1', value: 'Primer ítem', selected: false },
-      { id: '2', value: 'Segundo ítem', selected: false },
-      { id: '3', value: 'Tercer ítem', selected: false },
+      { id: '1', value: 'Item 1', selected: false },
+      { id: '2', value: 'Item 2', selected: false },
     ];
-    const expectedLength = list.length - 1;
+    const action: UndoAction = {
+      type: 'ADD',
+      item: { id: '2', value: 'Item 2', selected: false },
+    };
 
-    // Act
-    const result = undoLastAdd(list);
+    const result = applyUndoAction(list, action);
 
-    // Assert
-    expect(result).toHaveLength(expectedLength);
-    expect(result).toEqual(list.slice(0, -1));
+    expect(result).toHaveLength(1);
+    expect(result[0].id).toBe('1');
   });
 
-  it('debería retornar una lista vacía cuando solo hay un elemento', () => {
-    // Arrange
-    const list: TextList = [{ id: '1', value: 'Único ítem', selected: false }];
+  it('debería deshacer una acción DELETE_SELECTED restaurando los elementos', () => {
+    const list: TextList = [{ id: '1', value: 'Item 1', selected: false }];
+    const action: UndoAction = {
+      type: 'DELETE_SELECTED',
+      deletedItems: [
+        { id: '2', value: 'Item 2', selected: true },
+        { id: '3', value: 'Item 3', selected: false },
+      ],
+    };
 
-    // Act
-    const result = undoLastAdd(list);
+    const result = applyUndoAction(list, action);
 
-    // Assert
-    expect(result).toHaveLength(0);
-    expect(result).toEqual([]);
+    expect(result).toHaveLength(3);
+    expect(result.map((item) => item.id)).toEqual(['1', '2', '3']);
+    expect(result.find((item) => item.id === '2')?.selected).toBe(false);
+    expect(result.find((item) => item.id === '3')?.selected).toBe(false);
   });
 
-  it('debería retornar una lista vacía cuando la lista ya está vacía', () => {
-    // Arrange
-    const list: TextList = [];
+  it('debería deshacer una acción DELETE_ITEM restaurando el elemento', () => {
+    const list: TextList = [{ id: '1', value: 'Item 1', selected: false }];
+    const action: UndoAction = {
+      type: 'DELETE_ITEM',
+      deletedItem: { id: '2', value: 'Item 2', selected: true },
+    };
 
-    // Act
-    const result = undoLastAdd(list);
+    const result = applyUndoAction(list, action);
 
-    // Assert
-    expect(result).toHaveLength(0);
-    expect(result).toEqual([]);
+    expect(result).toHaveLength(2);
+    expect(result.map((item) => item.id)).toEqual(['1', '2']);
+    expect(result.find((item) => item.id === '2')?.selected).toBe(false);
   });
 
-  it('debería retornar una nueva lista sin mutar la original', () => {
-    // Arrange
-    const list: TextList = [
-      { id: '1', value: 'Primer ítem', selected: false },
-      { id: '2', value: 'Segundo ítem', selected: false },
-    ];
-    const originalList = [...list];
+  it('debería retornar la lista original para acciones desconocidas', () => {
+    const list: TextList = [{ id: '1', value: 'Item 1', selected: false }];
+    const action = { type: 'UNKNOWN' } as unknown as UndoAction;
 
-    // Act
-    const result = undoLastAdd(list);
+    const result = applyUndoAction(list, action);
 
-    // Assert
-    expect(result).not.toBe(list);
-    expect(list).toEqual(originalList);
+    expect(result).toEqual(list);
   });
 
-  it('debería mantener los elementos restantes en el orden correcto', () => {
-    // Arrange
-    const list: TextList = [
-      { id: '1', value: 'Primer ítem', selected: false },
-      { id: '2', value: 'Segundo ítem', selected: true },
-      { id: '3', value: 'Tercer ítem', selected: false },
-    ];
+  it('debería ordenar correctamente elementos con IDs no numéricos', () => {
+    const list: TextList = [{ id: 'item-1', value: 'Item 1', selected: false }];
+    const action: UndoAction = {
+      type: 'DELETE_SELECTED',
+      deletedItems: [
+        { id: 'item-3', value: 'Item 3', selected: true },
+        { id: 'item-2', value: 'Item 2', selected: true },
+      ],
+    };
 
-    // Act
-    const result = undoLastAdd(list);
+    const result = applyUndoAction(list, action);
 
-    // Assert
-    expect(result).toEqual([
-      { id: '1', value: 'Primer ítem', selected: false },
-      { id: '2', value: 'Segundo ítem', selected: true },
+    expect(result).toHaveLength(3);
+    expect(result.map((item) => item.id)).toEqual([
+      'item-1',
+      'item-2',
+      'item-3',
     ]);
+    expect(result.find((item) => item.id === 'item-2')?.selected).toBe(false);
+    expect(result.find((item) => item.id === 'item-3')?.selected).toBe(false);
+  });
+
+  it('debería restaurar elementos sin seleccionar independientemente de su estado original', () => {
+    const list: TextList = [];
+    const action: UndoAction = {
+      type: 'DELETE_SELECTED',
+      deletedItems: [
+        { id: '1', value: 'Item 1', selected: true },
+        { id: '2', value: 'Item 2', selected: false },
+        { id: '3', value: 'Item 3', selected: true },
+      ],
+    };
+
+    const result = applyUndoAction(list, action);
+
+    expect(result).toHaveLength(3);
+    result.forEach((item) => {
+      expect(item.selected).toBe(false);
+    });
+  });
+});
+
+describe('createUndoActions', () => {
+  it('debería crear una acción ADD correctamente', () => {
+    const item = { id: '1', value: 'Test item', selected: false };
+
+    const action = createAddUndoAction(item);
+
+    expect(action).toEqual({
+      type: 'ADD',
+      item,
+    });
+  });
+
+  it('debería crear una acción DELETE_SELECTED correctamente', () => {
+    const deletedItems = [
+      { id: '1', value: 'Item 1', selected: false },
+      { id: '2', value: 'Item 2', selected: false },
+    ];
+
+    const action = createDeleteSelectedUndoAction(deletedItems);
+
+    expect(action).toEqual({
+      type: 'DELETE_SELECTED',
+      deletedItems,
+    });
+  });
+
+  it('debería crear una acción DELETE_ITEM correctamente', () => {
+    const deletedItem = { id: '1', value: 'Test item', selected: false };
+
+    const action = createDeleteItemUndoAction(deletedItem);
+
+    expect(action).toEqual({
+      type: 'DELETE_ITEM',
+      deletedItem,
+    });
   });
 });

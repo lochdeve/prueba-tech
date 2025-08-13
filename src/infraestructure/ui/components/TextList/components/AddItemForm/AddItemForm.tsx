@@ -21,7 +21,7 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({
     const trimmedValue = value.trim();
 
     if (!trimmedValue) {
-      setError('The text cannot be empty');
+      setError('the text cannot be empty');
       return;
     }
 

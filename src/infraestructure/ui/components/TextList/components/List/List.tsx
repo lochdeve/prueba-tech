@@ -55,11 +55,7 @@ const TextList: React.FC = () => {
         canUndo={canUndo}
       />
 
-      <Modal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        title='Add item to list'
-      >
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <AddItemForm
           onSubmit={handleAddItem}
           onCancel={handleCloseModal}

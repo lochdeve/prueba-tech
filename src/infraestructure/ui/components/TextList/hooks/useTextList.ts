@@ -9,13 +9,7 @@ import {
 import type { TextList, UndoAction } from '../../../../../domain/types';
 
 export const useTextList = () => {
-  const [items, setItems] = useState<TextList>([
-    { id: '1', value: 'ef6sa', selected: false },
-    { id: '2', value: 'e75sa', selected: false },
-    { id: '3', value: 'efs899a', selected: false },
-    { id: '4', value: 'efs90a', selected: false },
-    { id: '5', value: 'ef3445sa', selected: false },
-  ]);
+  const [items, setItems] = useState<TextList>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [undoStack, setUndoStack] = useState<UndoAction[]>([]);

@@ -60,6 +60,13 @@ input::placeholder {
   font-weight: 500;
 }
 
+.characterCount {
+  color: #666;
+  font-size: 14px;
+  text-align: right;
+  margin-top: 4px;
+}
+
 .actions {
   display: flex;
   gap: 16px;

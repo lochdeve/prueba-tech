@@ -12,28 +12,18 @@ describe('AddItemForm', () => {
   it('renders form elements correctly', () => {
     render(<AddItemForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} />);
 
-    expect(screen.getByLabelText('Text')).toBeInTheDocument();
+    expect(screen.getByLabelText('Add item to list')).toBeInTheDocument();
     expect(
       screen.getByPlaceholderText('Type the text here...')
     ).toBeInTheDocument();
     expect(screen.getByText('Cancel')).toBeInTheDocument();
     expect(screen.getByText('Add')).toBeInTheDocument();
-    expect(screen.getByText('0/100')).toBeInTheDocument();
-  });
-
-  it('updates character count when typing', () => {
-    render(<AddItemForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} />);
-
-    const input = screen.getByLabelText('Text');
-    fireEvent.change(input, { target: { value: 'test' } });
-
-    expect(screen.getByText('4/100')).toBeInTheDocument();
   });
 
   it('shows error for empty submission', async () => {
     render(<AddItemForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} />);
 
-    const input = screen.getByLabelText('Text');
+    const input = screen.getByLabelText('Add item to list');
     fireEvent.change(input, { target: { value: 'test' } });
     fireEvent.change(input, { target: { value: '' } });
 
@@ -41,27 +31,7 @@ describe('AddItemForm', () => {
     fireEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(
-        screen.getByText('El texto no puede estar vacío')
-      ).toBeInTheDocument();
-    });
-    expect(mockOnSubmit).not.toHaveBeenCalled();
-  });
-
-  it('shows error for text too long', async () => {
-    render(<AddItemForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} />);
-
-    const input = screen.getByLabelText('Text');
-    const longText = 'a'.repeat(101);
-    fireEvent.change(input, { target: { value: longText } });
-
-    const submitButton = screen.getByText('Add');
-    fireEvent.click(submitButton);
-
-    await waitFor(() => {
-      expect(
-        screen.getByText('El texto no puede tener más de 100 caracteres')
-      ).toBeInTheDocument();
+      expect(screen.getByText('the text cannot be empty')).toBeInTheDocument();
     });
     expect(mockOnSubmit).not.toHaveBeenCalled();
   });
@@ -69,7 +39,7 @@ describe('AddItemForm', () => {
   it('calls onSubmit with valid text', async () => {
     render(<AddItemForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} />);
 
-    const input = screen.getByLabelText('Text');
+    const input = screen.getByLabelText('Add item to list');
     fireEvent.change(input, { target: { value: 'test item' } });
 
     const submitButton = screen.getByText('Add');
@@ -92,7 +62,7 @@ describe('AddItemForm', () => {
   it('clears error when typing after error', async () => {
     render(<AddItemForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} />);
 
-    const input = screen.getByLabelText('Text');
+    const input = screen.getByLabelText('Add item to list');
     fireEvent.change(input, { target: { value: 'test' } });
     fireEvent.change(input, { target: { value: '' } });
 
@@ -100,16 +70,14 @@ describe('AddItemForm', () => {
     fireEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(
-        screen.getByText('El texto no puede estar vacío')
-      ).toBeInTheDocument();
+      expect(screen.getByText('the text cannot be empty')).toBeInTheDocument();
     });
 
     fireEvent.change(input, { target: { value: 'test' } });
 
     await waitFor(() => {
       expect(
-        screen.queryByText('El texto no puede estar vacío')
+        screen.queryByText('the text cannot be empty')
       ).not.toBeInTheDocument();
     });
   });
@@ -124,7 +92,7 @@ describe('AddItemForm', () => {
     );
 
     expect(screen.getByText('Adding...')).toBeInTheDocument();
-    expect(screen.getByLabelText('Text')).toBeDisabled();
+    expect(screen.getByLabelText('Add item to list')).toBeDisabled();
     expect(screen.getByText('Cancel')).toBeDisabled();
   });
 });

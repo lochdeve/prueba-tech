@@ -10,30 +10,28 @@ describe('Modal', () => {
 
   it('renders nothing when isOpen is false', () => {
     render(
-      <Modal isOpen={false} onClose={mockOnClose} title='Test Modal'>
+      <Modal isOpen={false} onClose={mockOnClose}>
         <div>Modal content</div>
       </Modal>
     );
 
-    expect(screen.queryByText('Test Modal')).not.toBeInTheDocument();
     expect(screen.queryByText('Modal content')).not.toBeInTheDocument();
   });
 
   it('renders modal content when isOpen is true', () => {
     render(
-      <Modal isOpen={true} onClose={mockOnClose} title='Test Modal'>
+      <Modal isOpen={true} onClose={mockOnClose}>
         <div>Modal content</div>
       </Modal>
     );
 
-    expect(screen.getByText('Test Modal')).toBeInTheDocument();
     expect(screen.getByText('Modal content')).toBeInTheDocument();
     expect(screen.getByLabelText('Cerrar modal')).toBeInTheDocument();
   });
 
   it('calls onClose when close button is clicked', () => {
     render(
-      <Modal isOpen={true} onClose={mockOnClose} title='Test Modal'>
+      <Modal isOpen={true} onClose={mockOnClose}>
         <div>Modal content</div>
       </Modal>
     );
@@ -46,7 +44,7 @@ describe('Modal', () => {
 
   it('calls onClose when backdrop is clicked', () => {
     render(
-      <Modal isOpen={true} onClose={mockOnClose} title='Test Modal'>
+      <Modal isOpen={true} onClose={mockOnClose}>
         <div>Modal content</div>
       </Modal>
     );
@@ -61,7 +59,7 @@ describe('Modal', () => {
 
   it('does not call onClose when modal content is clicked', () => {
     render(
-      <Modal isOpen={true} onClose={mockOnClose} title='Test Modal'>
+      <Modal isOpen={true} onClose={mockOnClose}>
         <div>Modal content</div>
       </Modal>
     );

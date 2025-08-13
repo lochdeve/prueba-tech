@@ -24,20 +24,14 @@ describe('TextList Component', () => {
     expect(screen.getByTestId('toolbar')).toBeInTheDocument();
   });
 
-  it('should render the correct number of text items', () => {
-    render(<TextList />);
-    const textItems = screen.getAllByTestId('text-list-item');
-    expect(textItems).toHaveLength(5);
-  });
-
-  it('should render all expected text items with correct content', () => {
-    const expectedTexts = ['ef6sa', 'e75sa', 'efs899a', 'efs90a', 'ef3445sa'];
-
+  it('should render empty state message when list is empty', () => {
     render(<TextList />);
 
-    expectedTexts.forEach((text) => {
-      expect(screen.getByText(text)).toBeInTheDocument();
-    });
+    expect(
+      screen.getByText(
+        "There are no elements in the list. Click on 'Add' to add the first one."
+      )
+    ).toBeInTheDocument();
   });
 
   it('should render the toolbar component', () => {
@@ -54,25 +48,31 @@ describe('TextList Component', () => {
     expect(screen.getByTestId('toolbar')).toBeInTheDocument();
   });
 
-  it('should render text items in the correct order', () => {
-    const expectedTexts = ['ef6sa', 'e75sa', 'efs899a', 'efs90a', 'ef3445sa'];
-
+  it('should render empty state when list has no items', () => {
     render(<TextList />);
-    const textItems = screen.getAllByTestId('text-list-item');
 
-    textItems.forEach((item, index) => {
-      expect(item).toHaveTextContent(expectedTexts[index]);
-    });
+    // Should show empty message
+    expect(
+      screen.getByText(
+        "There are no elements in the list. Click on 'Add' to add the first one."
+      )
+    ).toBeInTheDocument();
+
+    // Should not render any list items
+    expect(screen.queryByTestId('text-list-item')).not.toBeInTheDocument();
   });
 
-  it('should pass the correct text prop to each TextListItem', () => {
-    const expectedTexts = ['ef6sa', 'e75sa', 'efs899a', 'efs90a', 'ef3445sa'];
-
+  it('should not render any text items when list is empty', () => {
     render(<TextList />);
 
-    expectedTexts.forEach((text) => {
-      const item = screen.getByText(text);
-      expect(item).toBeInTheDocument();
-    });
+    // Should not find any text list items
+    expect(screen.queryByTestId('text-list-item')).not.toBeInTheDocument();
+  });
+
+  it('should render toolbar with correct props', () => {
+    render(<TextList />);
+
+    // Should render toolbar
+    expect(screen.getByTestId('toolbar')).toBeInTheDocument();
   });
 });
